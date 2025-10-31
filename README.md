@@ -76,7 +76,7 @@ npm run preview
    - Gebruik de Save knop in de toolbar om op te slaan in local storage
    - Gebruik Export om een JSON bestand te downloaden
    - Gebruik Import om een eerder geëxporteerd bestand te laden
-5. **Navigate**:
+6. **Navigate**:
    - Gebruik de minimap rechtsonder voor overzicht
    - Zoom in/uit met de controls of scroll wheel
    - Pan door het canvas te slepen
