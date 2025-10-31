@@ -32,6 +32,32 @@ const agentTemplates: AgentTemplate[] = [
     defaultOutputs: [
       { id: 'output-1', name: 'response', type: 'string' }
     ],
+    defaultFields: [
+      {
+        id: 'field-1',
+        name: 'model',
+        label: 'Model',
+        type: 'select',
+        value: 'gpt-4',
+        options: ['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo', 'claude-3', 'claude-2']
+      },
+      {
+        id: 'field-2',
+        name: 'temperature',
+        label: 'Temperature',
+        type: 'number',
+        value: 0.7,
+        placeholder: '0.0 - 1.0'
+      },
+      {
+        id: 'field-3',
+        name: 'max_tokens',
+        label: 'Max Tokens',
+        type: 'number',
+        value: 1000,
+        placeholder: 'Maximum tokens'
+      },
+    ],
   },
   {
     type: 'tool',

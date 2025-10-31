@@ -19,6 +19,18 @@ export interface OutputPort {
   type?: string;
 }
 
+export type CustomFieldType = 'text' | 'number' | 'boolean' | 'textarea' | 'select';
+
+export interface CustomField {
+  id: string;
+  name: string;
+  label: string;
+  type: CustomFieldType;
+  value: any;
+  placeholder?: string;
+  options?: string[]; // For select type
+}
+
 export interface AgentNodeData {
   label: string;
   type: AgentType;
@@ -26,6 +38,7 @@ export interface AgentNodeData {
   instruction?: string;
   inputs?: InputPort[];
   outputs?: OutputPort[];
+  fields?: CustomField[];
   config?: Record<string, any>;
   icon?: string;
 }
@@ -39,4 +52,5 @@ export interface AgentTemplate {
   defaultConfig?: Record<string, any>;
   defaultInputs?: InputPort[];
   defaultOutputs?: OutputPort[];
+  defaultFields?: CustomField[];
 }

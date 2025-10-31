@@ -47,12 +47,19 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   },
 
   updateNode: (id: string, data: Partial<AgentNodeData>) => {
+    const updatedNodes = get().nodes.map((node) =>
+      node.id === id
+        ? { ...node, data: { ...node.data, ...data } }
+        : node
+    );
+
+    const updatedSelectedNode = get().selectedNode?.id === id
+      ? updatedNodes.find(node => node.id === id) || null
+      : get().selectedNode;
+
     set({
-      nodes: get().nodes.map((node) =>
-        node.id === id
-          ? { ...node, data: { ...node.data, ...data } }
-          : node
-      ),
+      nodes: updatedNodes,
+      selectedNode: updatedSelectedNode,
     });
   },
 

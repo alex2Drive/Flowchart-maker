@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useFlowStore } from '../store';
-import { InputPort, OutputPort } from '../types';
-import { X, Plus, Trash2, ArrowDown, ArrowUp, FileText } from 'lucide-react';
+import { InputPort, OutputPort, CustomField, CustomFieldType } from '../types';
+import { X, Plus, Trash2, ArrowDown, ArrowUp, FileText, Sliders } from 'lucide-react';
 
 export default function PropertiesPanel() {
   const { selectedNode, updateNode, setSelectedNode, deleteNode } = useFlowStore();
-  const [activeTab, setActiveTab] = useState<'general' | 'inputs' | 'outputs' | 'instruction'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'inputs' | 'outputs' | 'fields' | 'instruction'>('general');
 
   if (!selectedNode) {
     return null;
@@ -75,8 +75,34 @@ export default function PropertiesPanel() {
     updateNode(selectedNode.id, { outputs: currentOutputs });
   };
 
+  // Field management
+  const addField = () => {
+    const currentFields = selectedNode.data.fields || [];
+    const newField: CustomField = {
+      id: `field-${Date.now()}`,
+      name: `field_${currentFields.length + 1}`,
+      label: `Field ${currentFields.length + 1}`,
+      type: 'text',
+      value: '',
+    };
+    updateNode(selectedNode.id, { fields: [...currentFields, newField] });
+  };
+
+  const updateField = (index: number, field: keyof CustomField, value: any) => {
+    const currentFields = [...(selectedNode.data.fields || [])];
+    currentFields[index] = { ...currentFields[index], [field]: value };
+    updateNode(selectedNode.id, { fields: currentFields });
+  };
+
+  const removeField = (index: number) => {
+    const currentFields = [...(selectedNode.data.fields || [])];
+    currentFields.splice(index, 1);
+    updateNode(selectedNode.id, { fields: currentFields });
+  };
+
   const inputs = selectedNode.data.inputs || [];
   const outputs = selectedNode.data.outputs || [];
+  const fields = selectedNode.data.fields || [];
 
   return (
     <div className="w-96 bg-gray-900 border-l border-gray-700 flex flex-col h-full">
@@ -123,6 +149,17 @@ export default function PropertiesPanel() {
         >
           <ArrowUp className="w-3 h-3" />
           Outputs ({outputs.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('fields')}
+          className={`flex-1 px-3 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1 ${
+            activeTab === 'fields'
+              ? 'bg-gray-800 text-white border-b-2 border-blue-500'
+              : 'text-gray-400 hover:text-white hover:bg-gray-800'
+          }`}
+        >
+          <Sliders className="w-3 h-3" />
+          Fields ({fields.length})
         </button>
         <button
           onClick={() => setActiveTab('instruction')}
@@ -349,6 +386,185 @@ export default function PropertiesPanel() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Fields Tab */}
+        {activeTab === 'fields' && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray-400">
+                Add custom fields to display on the node
+              </p>
+              <button
+                onClick={addField}
+                className="flex items-center gap-1 px-3 py-1.5 bg-orange-600 hover:bg-orange-700
+                         text-white rounded text-sm font-medium transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Add
+              </button>
+            </div>
+
+            {fields.length === 0 && (
+              <div className="text-center py-8 text-gray-500 text-sm">
+                No custom fields defined
+              </div>
+            )}
+
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="p-3 bg-gray-800 border border-gray-700 rounded space-y-2"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-orange-400">
+                    Field #{index + 1}
+                  </span>
+                  <button
+                    onClick={() => removeField(index)}
+                    className="p-1 hover:bg-gray-700 rounded transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4 text-red-400" />
+                  </button>
+                </div>
+
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1">Label (shown on node)</label>
+                  <input
+                    type="text"
+                    value={field.label}
+                    onChange={(e) => updateField(index, 'label', e.target.value)}
+                    className="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded
+                             text-white text-sm focus:outline-none focus:border-orange-500"
+                    placeholder="Field label"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1">Internal Name</label>
+                  <input
+                    type="text"
+                    value={field.name}
+                    onChange={(e) => updateField(index, 'name', e.target.value)}
+                    className="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded
+                             text-white text-sm focus:outline-none focus:border-orange-500"
+                    placeholder="field_name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1">Field Type</label>
+                  <select
+                    value={field.type}
+                    onChange={(e) => {
+                      const newType = e.target.value as CustomFieldType;
+                      updateField(index, 'type', newType);
+                      // Reset value based on type
+                      if (newType === 'boolean') {
+                        updateField(index, 'value', false);
+                      } else if (newType === 'number') {
+                        updateField(index, 'value', 0);
+                      } else {
+                        updateField(index, 'value', '');
+                      }
+                    }}
+                    className="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded
+                             text-white text-sm focus:outline-none focus:border-orange-500"
+                  >
+                    <option value="text">Text</option>
+                    <option value="textarea">Textarea</option>
+                    <option value="number">Number</option>
+                    <option value="boolean">Boolean</option>
+                    <option value="select">Select</option>
+                  </select>
+                </div>
+
+                {field.type === 'select' && (
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">
+                      Options (comma separated)
+                    </label>
+                    <input
+                      type="text"
+                      value={(field.options || []).join(', ')}
+                      onChange={(e) => {
+                        const options = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
+                        updateField(index, 'options', options);
+                      }}
+                      className="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded
+                               text-white text-sm focus:outline-none focus:border-orange-500"
+                      placeholder="option1, option2, option3"
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1">Value</label>
+                  {field.type === 'boolean' ? (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value || false}
+                        onChange={(e) => updateField(index, 'value', e.target.checked)}
+                        className="w-4 h-4 bg-gray-900 border-gray-600 rounded"
+                      />
+                      <span className="text-xs text-gray-400">
+                        {field.value ? 'True' : 'False'}
+                      </span>
+                    </div>
+                  ) : field.type === 'number' ? (
+                    <input
+                      type="number"
+                      value={field.value}
+                      onChange={(e) => updateField(index, 'value', Number(e.target.value))}
+                      className="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded
+                               text-white text-sm focus:outline-none focus:border-orange-500"
+                      placeholder={field.placeholder || 'Enter number'}
+                    />
+                  ) : field.type === 'textarea' ? (
+                    <textarea
+                      value={field.value}
+                      onChange={(e) => updateField(index, 'value', e.target.value)}
+                      rows={3}
+                      className="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded
+                               text-white text-sm focus:outline-none focus:border-orange-500 resize-none"
+                      placeholder={field.placeholder || 'Enter text'}
+                    />
+                  ) : field.type === 'select' ? (
+                    <select
+                      value={field.value}
+                      onChange={(e) => updateField(index, 'value', e.target.value)}
+                      className="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded
+                               text-white text-sm focus:outline-none focus:border-orange-500"
+                    >
+                      <option value="">Select option...</option>
+                      {(field.options || []).map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      value={field.value}
+                      onChange={(e) => updateField(index, 'value', e.target.value)}
+                      className="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded
+                               text-white text-sm focus:outline-none focus:border-orange-500"
+                      placeholder={field.placeholder || 'Enter value'}
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+
+            <div className="p-3 bg-orange-500/10 border border-orange-500/30 rounded">
+              <p className="text-xs text-orange-300">
+                <strong>Tip:</strong> Custom fields are displayed directly on the node in
+                the diagram. Use them for key parameters like model, temperature, API keys, etc.
+              </p>
+            </div>
           </div>
         )}
 

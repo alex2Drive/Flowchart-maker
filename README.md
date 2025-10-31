@@ -10,8 +10,10 @@ Een moderne, interactieve flowchart maker speciaal ontworpen voor het visualiser
 - **⚙️ Custom Modules**: Configureer elke node met:
   - **📥 Input Ports**: Definieer meerdere inputs met naam, type, en required status
   - **📤 Output Ports**: Definieer meerdere outputs met naam en type
+  - **🎛️ Custom Fields**: Maak je eigen velden die zichtbaar zijn op de node (text, number, boolean, textarea, select)
   - **📝 Instructions**: Schrijf gedetailleerde instructies voor elke node
-- **🎯 Visual Feedback**: Badges tonen input/output counts en instruction status
+- **🎯 Visual Feedback**: Badges tonen input/output counts, field counts en instruction status
+- **✏️ Live Editing**: Wijzig velden direct in het properties panel en zie ze real-time op de node verschijnen
 - **💾 Save/Load**: Sla je flowcharts op in local storage of exporteer naar JSON
 - **🔍 Canvas Controls**: Zoom, pan, minimap voor overzicht
 - **⌨️ Keyboard Shortcuts**: Ctrl/Cmd+S om op te slaan, Delete om nodes te verwijderen
@@ -56,15 +58,21 @@ npm run preview
 ## 📖 Gebruik
 
 1. **Sleep een Agent Node**: Klik en sleep een agent type vanuit de linker sidebar naar het canvas
-2. **Configureer Custom Modules**: Klik op een node om het properties panel te openen met 4 tabs:
+2. **Configureer Custom Modules**: Klik op een node om het properties panel te openen met 5 tabs:
    - **General**: Label en beschrijving aanpassen
    - **Inputs**: Voeg custom input ports toe (naam, type, required)
    - **Outputs**: Voeg custom output ports toe (naam, type)
+   - **Fields**: Maak custom velden die direct op de node worden getoond (Model, Temperature, API Key, etc.)
    - **Instruction**: Schrijf gedetailleerde instructies voor de node
-3. **Verbind Nodes**: Sleep van een output handle (onderaan) naar een input handle (bovenaan) van een andere node
+3. **Custom Fields Toevoegen**:
+   - Klik op de Fields tab
+   - Klik op "Add" om een nieuw veld toe te voegen
+   - Kies het veld type: Text, Number, Boolean, Textarea, of Select
+   - Vul de waarde in - deze wordt direct op de node getoond!
+4. **Verbind Nodes**: Sleep van een output handle (onderaan) naar een input handle (bovenaan) van een andere node
    - Elke input/output port heeft zijn eigen handle
    - Hover over handles voor port namen
-4. **Save Your Work**:
+5. **Save Your Work**:
    - Gebruik de Save knop in de toolbar om op te slaan in local storage
    - Gebruik Export om een JSON bestand te downloaden
    - Gebruik Import om een eerder geëxporteerd bestand te laden

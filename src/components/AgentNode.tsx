@@ -38,13 +38,14 @@ function AgentNode({ data, selected }: NodeProps<AgentNodeData>) {
 
   const inputs = data.inputs || [];
   const outputs = data.outputs || [];
+  const fields = data.fields || [];
   const hasInstruction = data.instruction && data.instruction.trim().length > 0;
 
   return (
     <div
       className={`
         relative px-4 py-3 rounded-lg shadow-lg border-2 transition-all
-        bg-gray-800 min-w-[200px] max-w-[280px]
+        bg-gray-800 min-w-[220px] max-w-[300px]
         ${selected ? 'border-blue-400 shadow-blue-400/50' : 'border-gray-600'}
       `}
     >
@@ -80,6 +81,22 @@ function AgentNode({ data, selected }: NodeProps<AgentNodeData>) {
         </div>
       </div>
 
+      {/* Custom Fields */}
+      {fields.length > 0 && (
+        <div className="mt-3 pt-3 border-t border-gray-700 space-y-2">
+          {fields.map((field) => (
+            <div key={field.id} className="flex items-center justify-between text-xs">
+              <span className="text-gray-400 truncate">{field.label}:</span>
+              <span className="text-white font-medium ml-2 truncate max-w-[150px]" title={String(field.value)}>
+                {field.type === 'boolean'
+                  ? (field.value ? '✓' : '✗')
+                  : String(field.value)}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Module badges */}
       <div className="flex flex-wrap gap-1 mt-2">
         {inputs.length > 0 && (
@@ -98,6 +115,11 @@ function AgentNode({ data, selected }: NodeProps<AgentNodeData>) {
           <div className="flex items-center gap-1 px-2 py-0.5 bg-purple-500/20 rounded text-xs text-purple-300">
             <FileText className="w-3 h-3" />
             <span>instruction</span>
+          </div>
+        )}
+        {fields.length > 0 && (
+          <div className="flex items-center gap-1 px-2 py-0.5 bg-orange-500/20 rounded text-xs text-orange-300">
+            <span>{fields.length} field{fields.length !== 1 ? 's' : ''}</span>
           </div>
         )}
       </div>
