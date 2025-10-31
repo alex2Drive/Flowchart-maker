@@ -6,8 +6,12 @@ Een moderne, interactieve flowchart maker speciaal ontworpen voor het visualiser
 
 - **🎨 Modern Design**: Strak, donker thema met moderne UI/UX
 - **🖱️ Drag & Drop**: Sleep AI agent nodes vanuit de sidebar naar het canvas
-- **🔗 Visual Connections**: Verbind nodes om workflows te creëren
-- **⚙️ Configureerbare Nodes**: Pas node eigenschappen aan via het properties panel
+- **🔗 Visual Connections**: Verbind nodes om workflows te creëren met multiple input/output ports
+- **⚙️ Custom Modules**: Configureer elke node met:
+  - **📥 Input Ports**: Definieer meerdere inputs met naam, type, en required status
+  - **📤 Output Ports**: Definieer meerdere outputs met naam en type
+  - **📝 Instructions**: Schrijf gedetailleerde instructies voor elke node
+- **🎯 Visual Feedback**: Badges tonen input/output counts en instruction status
 - **💾 Save/Load**: Sla je flowcharts op in local storage of exporteer naar JSON
 - **🔍 Canvas Controls**: Zoom, pan, minimap voor overzicht
 - **⌨️ Keyboard Shortcuts**: Ctrl/Cmd+S om op te slaan, Delete om nodes te verwijderen
@@ -52,8 +56,14 @@ npm run preview
 ## 📖 Gebruik
 
 1. **Sleep een Agent Node**: Klik en sleep een agent type vanuit de linker sidebar naar het canvas
-2. **Verbind Nodes**: Sleep van de onderste handle (uitgang) van een node naar de bovenste handle (ingang) van een andere node
-3. **Edit Properties**: Klik op een node om het properties panel te openen en eigenschappen aan te passen
+2. **Configureer Custom Modules**: Klik op een node om het properties panel te openen met 4 tabs:
+   - **General**: Label en beschrijving aanpassen
+   - **Inputs**: Voeg custom input ports toe (naam, type, required)
+   - **Outputs**: Voeg custom output ports toe (naam, type)
+   - **Instruction**: Schrijf gedetailleerde instructies voor de node
+3. **Verbind Nodes**: Sleep van een output handle (onderaan) naar een input handle (bovenaan) van een andere node
+   - Elke input/output port heeft zijn eigen handle
+   - Hover over handles voor port namen
 4. **Save Your Work**:
    - Gebruik de Save knop in de toolbar om op te slaan in local storage
    - Gebruik Export om een JSON bestand te downloaden

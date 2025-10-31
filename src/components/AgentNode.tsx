@@ -8,7 +8,10 @@ import {
   GitBranch,
   Send,
   Code,
-  Zap
+  Zap,
+  ArrowDown,
+  ArrowUp,
+  FileText
 } from 'lucide-react';
 
 const iconMap: Record<string, any> = {
@@ -33,42 +36,86 @@ function AgentNode({ data, selected }: NodeProps<AgentNodeData>) {
   const Icon = iconMap[data.type] || Zap;
   const colorClass = colorMap[data.type] || 'bg-gray-500';
 
+  const inputs = data.inputs || [];
+  const outputs = data.outputs || [];
+  const hasInstruction = data.instruction && data.instruction.trim().length > 0;
+
   return (
     <div
       className={`
         relative px-4 py-3 rounded-lg shadow-lg border-2 transition-all
-        bg-gray-800 min-w-[180px]
+        bg-gray-800 min-w-[200px] max-w-[280px]
         ${selected ? 'border-blue-400 shadow-blue-400/50' : 'border-gray-600'}
       `}
     >
-      <Handle
-        type="target"
-        position={Position.Top}
-        className="!bg-gray-400 !border-2 !border-gray-600"
-      />
+      {/* Input Handles */}
+      {inputs.map((input, index) => (
+        <Handle
+          key={input.id}
+          type="target"
+          position={Position.Top}
+          id={input.id}
+          style={{
+            left: `${((index + 1) * 100) / (inputs.length + 1)}%`,
+          }}
+          className="!bg-blue-400 !border-2 !border-blue-600 !w-3 !h-3"
+          title={`${input.name}${input.required ? ' (required)' : ''}`}
+        />
+      ))}
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 mb-2">
         <div className={`${colorClass} p-2 rounded-md`}>
           <Icon className="w-5 h-5 text-white" />
         </div>
 
-        <div className="flex-1">
-          <div className="font-semibold text-white text-sm">
+        <div className="flex-1 min-w-0">
+          <div className="font-semibold text-white text-sm truncate">
             {data.label}
           </div>
           {data.description && (
-            <div className="text-xs text-gray-400 mt-1">
+            <div className="text-xs text-gray-400 mt-1 line-clamp-2">
               {data.description}
             </div>
           )}
         </div>
       </div>
 
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        className="!bg-gray-400 !border-2 !border-gray-600"
-      />
+      {/* Module badges */}
+      <div className="flex flex-wrap gap-1 mt-2">
+        {inputs.length > 0 && (
+          <div className="flex items-center gap-1 px-2 py-0.5 bg-blue-500/20 rounded text-xs text-blue-300">
+            <ArrowDown className="w-3 h-3" />
+            <span>{inputs.length} input{inputs.length !== 1 ? 's' : ''}</span>
+          </div>
+        )}
+        {outputs.length > 0 && (
+          <div className="flex items-center gap-1 px-2 py-0.5 bg-green-500/20 rounded text-xs text-green-300">
+            <ArrowUp className="w-3 h-3" />
+            <span>{outputs.length} output{outputs.length !== 1 ? 's' : ''}</span>
+          </div>
+        )}
+        {hasInstruction && (
+          <div className="flex items-center gap-1 px-2 py-0.5 bg-purple-500/20 rounded text-xs text-purple-300">
+            <FileText className="w-3 h-3" />
+            <span>instruction</span>
+          </div>
+        )}
+      </div>
+
+      {/* Output Handles */}
+      {outputs.map((output, index) => (
+        <Handle
+          key={output.id}
+          type="source"
+          position={Position.Bottom}
+          id={output.id}
+          style={{
+            left: `${((index + 1) * 100) / (outputs.length + 1)}%`,
+          }}
+          className="!bg-green-400 !border-2 !border-green-600 !w-3 !h-3"
+          title={output.name}
+        />
+      ))}
     </div>
   );
 }

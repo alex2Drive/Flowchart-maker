@@ -15,6 +15,9 @@ const agentTemplates: AgentTemplate[] = [
     description: 'Receives user input or external data',
     icon: 'MessageSquare',
     color: 'bg-blue-500',
+    defaultOutputs: [
+      { id: 'output-1', name: 'data', type: 'any' }
+    ],
   },
   {
     type: 'llm',
@@ -23,6 +26,12 @@ const agentTemplates: AgentTemplate[] = [
     icon: 'Brain',
     color: 'bg-purple-500',
     defaultConfig: { model: 'gpt-4', temperature: 0.7 },
+    defaultInputs: [
+      { id: 'input-1', name: 'prompt', type: 'string', required: true }
+    ],
+    defaultOutputs: [
+      { id: 'output-1', name: 'response', type: 'string' }
+    ],
   },
   {
     type: 'tool',
@@ -30,6 +39,12 @@ const agentTemplates: AgentTemplate[] = [
     description: 'Executes external tools or APIs',
     icon: 'Wrench',
     color: 'bg-green-500',
+    defaultInputs: [
+      { id: 'input-1', name: 'parameters', type: 'object', required: true }
+    ],
+    defaultOutputs: [
+      { id: 'output-1', name: 'result', type: 'any' }
+    ],
   },
   {
     type: 'decision',
@@ -37,6 +52,13 @@ const agentTemplates: AgentTemplate[] = [
     description: 'Conditional branching logic',
     icon: 'GitBranch',
     color: 'bg-yellow-500',
+    defaultInputs: [
+      { id: 'input-1', name: 'condition', type: 'boolean', required: true }
+    ],
+    defaultOutputs: [
+      { id: 'output-1', name: 'true', type: 'any' },
+      { id: 'output-2', name: 'false', type: 'any' }
+    ],
   },
   {
     type: 'function',
@@ -44,6 +66,12 @@ const agentTemplates: AgentTemplate[] = [
     description: 'Custom code execution',
     icon: 'Code',
     color: 'bg-indigo-500',
+    defaultInputs: [
+      { id: 'input-1', name: 'input', type: 'any', required: true }
+    ],
+    defaultOutputs: [
+      { id: 'output-1', name: 'output', type: 'any' }
+    ],
   },
   {
     type: 'output',
@@ -51,6 +79,9 @@ const agentTemplates: AgentTemplate[] = [
     description: 'Final output or response',
     icon: 'Send',
     color: 'bg-red-500',
+    defaultInputs: [
+      { id: 'input-1', name: 'data', type: 'any', required: true }
+    ],
   },
 ];
 

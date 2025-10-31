@@ -73,6 +73,9 @@ function FlowCanvas() {
           label: template.label,
           type: template.type,
           description: template.description,
+          instruction: '',
+          inputs: template.defaultInputs || [],
+          outputs: template.defaultOutputs || [],
           config: template.defaultConfig,
         },
       };
